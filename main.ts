@@ -89,6 +89,11 @@ export default class CredentialsBlockPlugin extends Plugin {
 	async saveSettings() {
 		await this.saveData(this.settings);
 	}
+
+	onunload() {
+		// Clean up anything not automatically handled by Obsidian
+		console.log('Unloading CredentialsBlock plugin');
+	}
 }
 
 class CredentialsBlock extends MarkdownRenderChild {

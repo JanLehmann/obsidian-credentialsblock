@@ -12,7 +12,7 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = (process.argv[2] === "production");
-const vaultPath = "C:/dev/_Obsidian/.obsidian/plugins/passwordblock";
+const vaultPath = "C:/dev/_Obsidian/.obsidian/plugins/credentialsblock";
 
 const copyToVault = {
 	name: 'copy-to-vault',
