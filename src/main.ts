@@ -1,4 +1,4 @@
-import { Plugin, MarkdownRenderChild, setIcon, Notice, PluginSettingTab, App, Setting } from 'obsidian';
+import { Plugin, MarkdownRenderChild, setIcon, Notice, PluginSettingTab, App, Setting, MarkdownView } from 'obsidian';
 
 interface PasswordData {
 	name?: string;
@@ -33,7 +33,7 @@ export default class CredentialsBlockPlugin extends Plugin {
 
 		// This creates an icon in the left ribbon.
 		this.addRibbonIcon('key', 'Insert Credentials Block', (evt: MouseEvent) => {
-			const view = this.app.workspace.getActiveViewOfType(require('obsidian').MarkdownView);
+			const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 			if (view) {
 				const editor = view.editor;
 				const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
