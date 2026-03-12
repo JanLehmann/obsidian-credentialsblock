@@ -31,6 +31,20 @@ export default class CredentialsBlockPlugin extends Plugin {
 
 		this.addSettingTab(new CredentialsBlockSettingTab(this.app, this));
 
+		// This creates an icon in the left ribbon.
+		this.addRibbonIcon('key', 'Insert Credentials Block', (evt: MouseEvent) => {
+			const view = this.app.workspace.getActiveViewOfType(require('obsidian').MarkdownView);
+			if (view) {
+				const editor = view.editor;
+				const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
+				editor.replaceSelection(template);
+				const cursor = editor.getCursor();
+				editor.setCursor({ line: cursor.line - 5, ch: 6 });
+			} else {
+				new Notice('Please open a Markdown file first.');
+			}
+		});
+
 		const processor = (source: string, el: HTMLElement, ctx: any) => {
 			const rows = source.split("\n").filter((row) => row.includes(":"));
 			const data: PasswordData = {};
