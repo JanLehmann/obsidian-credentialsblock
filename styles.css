@@ -1,0 +1,76 @@
+.password-block-container {
+    background-color: var(--code-background);
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-family: var(--font-interface);
+}
+
+.pb-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 0;
+}
+
+.pb-label {
+    font-weight: bold;
+    min-width: 70px;
+    color: var(--text-muted);
+    font-size: 0.8em;
+}
+
+.pb-value-container {
+    flex-grow: 1;
+    margin: 0 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.pb-value {
+    font-family: var(--font-monospace);
+    font-size: 0.95em;
+}
+
+.pb-link {
+    color: var(--text-accent);
+    text-decoration: none;
+}
+
+.pb-link:hover {
+    text-decoration: underline;
+}
+
+.pb-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.pb-copy-btn, .pb-show-btn {
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: background-color 0.1s, color 0.1s, opacity 0.1s;
+    opacity: 0;
+}
+
+.password-block-container:hover .pb-copy-btn,
+.password-block-container:hover .pb-show-btn {
+    opacity: 1;
+}
+
+.pb-copy-btn:hover, .pb-show-btn:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+}
+
+.pb-copy-btn svg, .pb-show-btn svg {
+    width: 14px;
+    height: 14px;
+}

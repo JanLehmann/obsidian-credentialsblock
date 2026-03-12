@@ -1,0 +1,10 @@
+{
+	"id": "credentialsblock",
+	"name": "CredentialsBlock",
+	"version": "1.0.1",
+	"minAppVersion": "0.15.0",
+	"description": "Displays a credential block with copy buttons and maskable password field.",
+	"author": "JLehmann",
+	"authorUrl": "https://github.com/JanLehmann",
+	"isDesktopOnly": false
+}
