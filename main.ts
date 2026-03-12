@@ -31,7 +31,7 @@ export default class CredentialsBlockPlugin extends Plugin {
 
 		this.addSettingTab(new CredentialsBlockSettingTab(this.app, this));
 
-		this.registerMarkdownCodeBlockProcessor("passwordblock", (source, el, ctx) => {
+		const processor = (source: string, el: HTMLElement, ctx: any) => {
 			const rows = source.split("\n").filter((row) => row.includes(":"));
 			const data: PasswordData = {};
 
@@ -46,14 +46,17 @@ export default class CredentialsBlockPlugin extends Plugin {
 			});
 
 			ctx.addChild(new CredentialsBlock(el, data, this.settings));
-		});
+		};
+
+		this.registerMarkdownCodeBlockProcessor("passwordblock", processor);
+		this.registerMarkdownCodeBlockProcessor("credentialsblock", processor);
 
 		// Add command to command palette (and slash menu)
 		this.addCommand({
 			id: 'insert-credentials-block',
 			name: 'Insert Credentials Block',
 			editorCallback: (editor) => {
-				const template = "```passwordblock\nname: \nurl: \nlogin: \npassword: \n```";
+				const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
 				editor.replaceSelection(template);
 				// Move cursor to after 'name: '
 				const cursor = editor.getCursor();
@@ -69,7 +72,7 @@ export default class CredentialsBlockPlugin extends Plugin {
 						.setTitle("Insert Credentials Block")
 						.setIcon("lock")
 						.onClick(async () => {
-							const template = "```passwordblock\nname: \nurl: \nlogin: \npassword: \n```";
+							const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
 							editor.replaceSelection(template);
 							const cursor = editor.getCursor();
 							editor.setCursor({ line: cursor.line - 5, ch: 6 });
