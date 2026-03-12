@@ -12,5 +12,5 @@
 		"lib": ["DOM", "ESNext"],
 		"strict": true
 	},
-	"include": ["main.ts"]
+	"include": ["src/**/*.ts"]
 }
