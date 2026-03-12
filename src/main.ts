@@ -9,6 +9,7 @@ interface PasswordData {
 
 interface PasswordBlockSettings {
 	maskPasswordByDefault: boolean;
+	showRibbonIcon: boolean;
 	labelName: string;
 	labelUrl: string;
 	labelLogin: string;
@@ -17,6 +18,7 @@ interface PasswordBlockSettings {
 
 const DEFAULT_SETTINGS: PasswordBlockSettings = {
 	maskPasswordByDefault: true,
+	showRibbonIcon: true,
 	labelName: 'Name',
 	labelUrl: 'URL',
 	labelLogin: 'Login',
@@ -25,25 +27,14 @@ const DEFAULT_SETTINGS: PasswordBlockSettings = {
 
 export default class CredentialsBlockPlugin extends Plugin {
 	settings!: PasswordBlockSettings;
+	ribbonIconEl: HTMLElement | null = null;
 
 	async onload() {
 		await this.loadSettings();
 
 		this.addSettingTab(new CredentialsBlockSettingTab(this.app, this));
 
-		// This creates an icon in the left ribbon.
-		this.addRibbonIcon('key', 'Insert Credentials Block', (evt: MouseEvent) => {
-			const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-			if (view) {
-				const editor = view.editor;
-				const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
-				editor.replaceSelection(template);
-				const cursor = editor.getCursor();
-				editor.setCursor({ line: cursor.line - 5, ch: 6 });
-			} else {
-				new Notice('Please open a Markdown file first.');
-			}
-		});
+		this.refreshRibbonIcon();
 
 		const processor = (source: string, el: HTMLElement, ctx: any) => {
 			const rows = source.split("\n").filter((row) => row.includes(":"));
@@ -94,6 +85,30 @@ export default class CredentialsBlockPlugin extends Plugin {
 				});
 			})
 		);
+	}
+
+	refreshRibbonIcon() {
+		if (this.settings.showRibbonIcon) {
+			if (!this.ribbonIconEl) {
+				this.ribbonIconEl = this.addRibbonIcon('key', 'Insert Credentials Block', (evt: MouseEvent) => {
+					const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+					if (view) {
+						const editor = view.editor;
+						const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
+						editor.replaceSelection(template);
+						const cursor = editor.getCursor();
+						editor.setCursor({ line: cursor.line - 5, ch: 6 });
+					} else {
+						new Notice('Please open a Markdown file first.');
+					}
+				});
+			}
+		} else {
+			if (this.ribbonIconEl) {
+				this.ribbonIconEl.remove();
+				this.ribbonIconEl = null;
+			}
+		}
 	}
 
 	async loadSettings() {
@@ -209,6 +224,17 @@ class CredentialsBlockSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 		containerEl.createEl('h2', {text: 'Settings for CredentialsBlock'});
+
+		new Setting(containerEl)
+			.setName('Show Ribbon Icon')
+			.setDesc('Toggle the key icon in the left side bar.')
+			.addToggle(toggle => toggle
+				.setValue(this.plugin.settings.showRibbonIcon)
+				.onChange(async (value) => {
+					this.plugin.settings.showRibbonIcon = value;
+					await this.plugin.saveSettings();
+					this.plugin.refreshRibbonIcon();
+				}));
 
 		new Setting(containerEl)
 			.setName('Mask password by default')
