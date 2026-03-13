@@ -5,6 +5,14 @@
     padding: 8px 12px;
     margin: 8px 0;
     font-family: var(--font-interface);
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.password-block-container:hover {
+    border-color: var(--background-modifier-border) !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .pb-row {
