@@ -3,6 +3,7 @@ import { Plugin, MarkdownRenderChild, setIcon, Notice, PluginSettingTab, App, Se
 interface PasswordData {
 	name?: string;
 	url?: string;
+	ip?: string;
 	login?: string;
 	password?: string;
 }
@@ -12,6 +13,7 @@ interface PasswordBlockSettings {
 	showRibbonIcon: boolean;
 	labelName: string;
 	labelUrl: string;
+	labelIp: string;
 	labelLogin: string;
 	labelPassword: string;
 }
@@ -21,6 +23,7 @@ const DEFAULT_SETTINGS: PasswordBlockSettings = {
 	showRibbonIcon: true,
 	labelName: 'Name',
 	labelUrl: 'URL',
+	labelIp: 'IP',
 	labelLogin: 'Login',
 	labelPassword: 'Password'
 }
@@ -46,6 +49,7 @@ export default class CredentialsBlockPlugin extends Plugin {
 				const k = key.trim().toLowerCase();
 				if (k === "name") data.name = value;
 				if (k === "url") data.url = value;
+				if (k === "ip" || k === "host" || k === "server") data.ip = value;
 				if (k === "login" || k === "user" || k === "benutzer") data.login = value;
 				if (k === "password" || k === "passwort") data.password = value;
 			});
@@ -61,11 +65,11 @@ export default class CredentialsBlockPlugin extends Plugin {
 			id: 'insert-credentials-block',
 			name: 'Insert Credentials Block',
 			editorCallback: (editor) => {
-				const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
+				const template = "```credentialsblock\nname: \nurl: \nip: \nlogin: \npassword: \n```";
 				editor.replaceSelection(template);
 				// Move cursor to after 'name: '
 				const cursor = editor.getCursor();
-				editor.setCursor({ line: cursor.line - 5, ch: 6 });
+				editor.setCursor({ line: cursor.line - 6, ch: 6 });
 			}
 		});
 
@@ -77,10 +81,10 @@ export default class CredentialsBlockPlugin extends Plugin {
 						.setTitle("Insert Credentials Block")
 						.setIcon("lock")
 						.onClick(async () => {
-							const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
+							const template = "```credentialsblock\nname: \nurl: \nip: \nlogin: \npassword: \n```";
 							editor.replaceSelection(template);
 							const cursor = editor.getCursor();
-							editor.setCursor({ line: cursor.line - 5, ch: 6 });
+							editor.setCursor({ line: cursor.line - 6, ch: 6 });
 						});
 				});
 			})
@@ -94,10 +98,10 @@ export default class CredentialsBlockPlugin extends Plugin {
 					const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 					if (view) {
 						const editor = view.editor;
-						const template = "```credentialsblock\nname: \nurl: \nlogin: \npassword: \n```";
+						const template = "```credentialsblock\nname: \nurl: \nip: \nlogin: \npassword: \n```";
 						editor.replaceSelection(template);
 						const cursor = editor.getCursor();
-						editor.setCursor({ line: cursor.line - 5, ch: 6 });
+						editor.setCursor({ line: cursor.line - 6, ch: 6 });
 					} else {
 						new Notice('Please open a Markdown file first.');
 					}
@@ -144,6 +148,9 @@ class CredentialsBlock extends MarkdownRenderChild {
 		}
 		if (this.data.url) {
 			this.createRow(root, this.settings.labelUrl, this.data.url, true, false);
+		}
+		if (this.data.ip) {
+			this.createRow(root, this.settings.labelIp, this.data.ip, false, true);
 		}
 		if (this.data.login) {
 			this.createRow(root, this.settings.labelLogin, this.data.login, false, true);
@@ -265,6 +272,16 @@ class CredentialsBlockSettingTab extends PluginSettingTab {
 				.setValue(this.plugin.settings.labelUrl)
 				.onChange(async (value) => {
 					this.plugin.settings.labelUrl = value;
+					await this.plugin.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('IP Label')
+			.addText(text => text
+				.setPlaceholder('IP')
+				.setValue(this.plugin.settings.labelIp)
+				.onChange(async (value) => {
+					this.plugin.settings.labelIp = value;
 					await this.plugin.saveSettings();
 				}));
 
