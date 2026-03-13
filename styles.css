@@ -7,12 +7,35 @@
     font-family: var(--font-interface);
     outline: none !important;
     box-shadow: none !important;
+    border-collapse: collapse;
+}
+
+/* Specific Obsidian Live Preview / Editor mode overrides */
+.markdown-source-view.mod-cm6 .cm-content .password-block-container,
+.markdown-source-view.mod-cm6 .cm-line .password-block-container,
+.markdown-rendered .password-block-container {
+    border: 1px solid var(--background-modifier-border) !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .password-block-container:hover {
     border-color: var(--background-modifier-border) !important;
     outline: none !important;
     box-shadow: none !important;
+}
+
+/* Hide the default code block border that Obsidian sometimes wraps around */
+.markdown-source-view.mod-cm6 .cm-embed-block:has(.password-block-container) {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.markdown-source-view.mod-cm6 .cm-embed-block:hover:has(.password-block-container) {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .pb-row {
